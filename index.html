@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bé Minh Anh Học Tiếng Anh - Cambridge Starters</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F7F9FC;
+            user-select: none;
+        }
+
+        .btn-3d-green {
+            background-color: #58CC02;
+            box-shadow: 0 4px 0 #46A302;
+            transition: all 0.1s ease;
+        }
+        .btn-3d-green:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #46A302;
+        }
+
+        .btn-3d-blue {
+            background-color: #1CB0F6;
+            box-shadow: 0 4px 0 #1899D6;
+            transition: all 0.1s ease;
+        }
+        .btn-3d-blue:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #1899D6;
+        }
+
+        .btn-3d-orange {
+            background-color: #FF9600;
+            box-shadow: 0 4px 0 #E08400;
+            transition: all 0.1s ease;
+        }
+        .btn-3d-orange:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #E08400;
+        }
+
+        .card-3d {
+            border: 2px solid #E5E7EB;
+            box-shadow: 0 8px 0 #E5E7EB;
+            border-radius: 24px;
+        }
+
+        @keyframes float-gentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @keyframes blink-eyes {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        @keyframes lip-sync-talk {
+            0%, 100% { height: 6px; rx: 3px; }
+            25% { height: 18px; rx: 9px; }
+            50% { height: 8px; rx: 4px; }
+            75% { height: 22px; rx: 11px; }
+        }
+
+        .avatar-float {
+            animation: float-gentle 3.5s infinite ease-in-out;
+        }
+
+        .eye-blink {
+            transform-origin: center;
+            animation: blink-eyes 4s infinite;
+        }
+
+        .mouth-talking {
+            animation: lip-sync-talk 0.25s infinite linear;
+            transform-origin: center;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .mic-active {
+            background-color: #EF4444 !important;
+            animation: pulse-red 1.5s infinite;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F1F1F1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+    </style>
+</head>
+<body class="h-screen flex flex-col justify-between overflow-hidden text-gray-800">
+
+    <!-- HEADER / TOP BAR -->
+    <header class="bg-white border-b-2 border-gray-200 px-4 py-3 flex justify-between items-center z-10">
+        <button id="profileBadge" onclick="speakText('Bé Minh Anh')" class="flex items-center gap-3 bg-amber-100 border-2 border-amber-300 hover:bg-amber-200 px-4 py-2 rounded-2xl transition-all cursor-pointer active:scale-95 shadow-sm">
+            <span class="text-2xl">👧</span>
+            <div class="text-left">
+                <p class="text-xs text-amber-700 font-extrabold uppercase tracking-wider">Học sinh</p>
+                <p class="text-lg font-black text-amber-900 leading-none flex items-center gap-1">
+                    Bé: Minh Anh <i class="fa-solid fa-volume-high text-xs text-amber-600"></i>
+                </p>
+            </div>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-2 bg-blue-50 border-2 border-blue-200 px-4 py-2 rounded-2xl">
+            <i class="fa-solid fa-certificate text-blue-500 text-xl"></i>
+            <div>
+                <p class="text-xs text-blue-600 font-bold uppercase">Giáo trình</p>
+                <p class="text-sm font-extrabold text-blue-900">Cambridge Starters</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 bg-slate-100 border-2 border-slate-200 px-3 py-1.5 rounded-2xl">
+            <i class="fa-solid fa-gauge-high text-slate-500"></i>
+            <div class="flex flex-col">
+                <label for="speedRate" class="text-[10px] font-bold text-slate-500 uppercase">Tốc độ đọc: <span id="speedVal" class="text-blue-600 font-extrabold">1.0x</span></label>
+                <input type="range" id="speedRate" min="0.5" max="1.5" step="0.1" value="1.0" class="w-20 accent-blue-500 cursor-pointer h-1.5 bg-slate-300 rounded-lg">
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTENT GRID -->
+    <main class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 p-4 overflow-hidden max-w-7xl mx-auto w-full">
+        
+        <section class="md:col-span-4 flex flex-col gap-4 h-full overflow-y-auto">
+            <div class="bg-white card-3d p-4 flex flex-col items-center justify-center relative overflow-hidden flex-1 min-h-[280px]">
+                <div class="absolute top-3 left-3 bg-emerald-100 text-emerald-700 font-bold text-xs px-3 py-1 rounded-full border border-emerald-300 flex items-center gap-1 z-10">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Cô AI Trực Tuyến
+                </div>
+
+                <div id="avatarContainer" class="relative my-auto flex flex-col items-center">
+                    <div class="w-44 h-44 md:w-52 md:h-52 rounded-full bg-gradient-to-b from-sky-200 via-indigo-100 to-purple-200 border-4 border-blue-400 flex items-center justify-center shadow-lg avatar-float relative overflow-hidden">
+                        
+                        <svg width="180" height="180" viewBox="0 0 200 200" class="drop-shadow-md">
+                            <path d="M 40 100 C 30 40, 170 40, 160 100 C 160 140, 170 180, 150 190 C 130 150, 70 150, 50 190 C 30 180, 40 140, 40 100 Z" fill="#4A2E1B" />
+                            <path d="M 60 160 Q 100 130 140 160 L 155 200 L 45 200 Z" fill="#3B82F6" />
+                            <path d="M 85 150 L 100 170 L 115 150 Z" fill="#FFFFFF" />
+                            <ellipse cx="100" cy="105" rx="45" ry="48" fill="#FDE047" opacity="0.1" />
+                            <ellipse cx="100" cy="105" rx="42" ry="45" fill="#FCE7F3" />
+                            <ellipse cx="100" cy="108" rx="38" ry="40" fill="#FFDFC4" />
+                            <path d="M 58 85 Q 100 60 142 85 Q 115 70 100 82 Q 85 70 58 85 Z" fill="#5C3A21" />
+                            <rect x="68" y="90" width="26" height="18" rx="5" fill="none" stroke="#1E293B" stroke-width="3" />
+                            <rect x="106" y="90" width="26" height="18" rx="5" fill="none" stroke="#1E293B" stroke-width="3" />
+                            <line x1="94" y1="98" x2="106" y2="98" stroke="#1E293B" stroke-width="3" />
+                            <g class="eye-blink">
+                                <circle cx="81" cy="99" r="4" fill="#0F172A" />
+                                <circle cx="119" cy="99" r="4" fill="#0F172A" />
+                                <circle cx="82.5" cy="97.5" r="1.5" fill="#FFFFFF" />
+                                <circle cx="120.5" cy="97.5" r="1.5" fill="#FFFFFF" />
+                            </g>
+                            <ellipse cx="70" cy="115" rx="6" ry="4" fill="#F43F5E" opacity="0.3" />
+                            <ellipse cx="130" cy="115" rx="6" ry="4" fill="#F43F5E" opacity="0.3" />
+                            <rect id="teacherMouth" x="88" y="124" width="24" height="6" rx="3" fill="#E11D48" />
+                        </svg>
+
+                    </div>
+                    
+                    <div id="speakingIndicator" class="hidden absolute -bottom-2 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 z-20">
+                        <i class="fa-solid fa-volume-high animate-bounce"></i> Cô đang nói...
+                    </div>
+                </div>
+
+                <p id="teacherStatus" class="text-center text-xs font-bold text-slate-500 mt-2">
+                    "Chào bé Minh Anh! Cô sẵn sàng học cùng bé rồi!"
+                </p>
+            </div>
+
+            <div class="bg-white card-3d p-3 flex flex-col items-center">
+                <div class="w-full relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border-2 border-slate-200">
+                    <video id="webcam" autoplay playsinline class="w-full h-full object-cover hidden transform -scale-x-100"></video>
+                    <div id="cameraPlaceholder" class="flex flex-col items-center justify-center text-slate-400 p-4 text-center">
+                        <i class="fa-solid fa-video-slash text-3xl mb-1"></i>
+                        <span class="text-xs font-semibold">Camera đang tắt</span>
+                    </div>
+                </div>
+                <button id="toggleCamBtn" onclick="toggleCamera()" class="mt-2 w-full py-2 px-4 rounded-xl text-xs font-black text-white btn-3d-blue flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-camera"></i> <span id="camBtnText">Bật Camera Của Bé</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="md:col-span-8 flex flex-col gap-4 h-full overflow-hidden">
+            <div class="bg-white card-3d p-3 flex items-center gap-2 overflow-x-auto whitespace-nowrap">
+                <span class="text-xs font-black text-slate-400 uppercase mr-1"><i class="fa-solid fa-book-open text-amber-500"></i> Chủ đề:</span>
+                <button onclick="selectTopic('Colors & Shapes (Màu sắc & Hình khối)')" class="px-3 py-1.5 rounded-xl bg-pink-100 text-pink-700 hover:bg-pink-200 border border-pink-300 text-xs font-bold transition">🎨 Màu sắc</button>
+                <button onclick="selectTopic('Animals (Động vật quanh em)')" class="px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border border-emerald-300 text-xs font-bold transition">🐶 Động vật</button>
+                <button onclick="selectTopic('Family & Home (Gia đình & Nhà cửa)')" class="px-3 py-1.5 rounded-xl bg-purple-100 text-purple-700 hover:bg-purple-200 border border-purple-300 text-xs font-bold transition">🏡 Gia đình</button>
+                <button onclick="selectTopic('Numbers 1-10 (Chữ số đếm)')" class="px-3 py-1.5 rounded-xl bg-blue-100 text-blue-700 hover:bg-blue-200 border border-blue-300 text-xs font-bold transition">🔢 Số đếm</button>
+            </div>
+
+            <div class="bg-white card-3d flex-1 p-4 flex flex-col justify-between overflow-hidden">
+                <div id="chatBox" class="flex-1 overflow-y-auto space-y-3 pr-2">
+                    <div class="flex items-start gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm shrink-0">Cô</div>
+                        <div class="bg-blue-50 border border-blue-100 rounded-2xl rounded-tl-none p-3 max-w-[85%]">
+                            <p class="text-sm text-slate-800 font-medium">
+                                Xin chào <b>bé Minh Anh</b>! 👋 Cô là giáo viên tiếng Anh Cambridge của bé. Hôm nay chúng mình cùng học từ vựng mới nhé! Bé nhấn nút Micro màu cam để nói chuyện với cô nào!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-slate-100">
+                    <form id="chatForm" onsubmit="handleUserSubmit(event)" class="flex items-center gap-2">
+                        <button type="button" id="micBtn" onclick="toggleVoiceInput()" class="btn-3d-orange text-white font-black px-4 py-3 rounded-2xl flex items-center justify-center text-base shrink-0" title="Chạm để nói">
+                            <i id="micIcon" class="fa-solid fa-microphone"></i>
+                        </button>
+
+                        <input type="text" id="userInput" placeholder="Bé có thể nhấn Micro để nói hoặc nhập lời nhắn..." class="flex-1 bg-slate-50 border-2 border-slate-200 focus:border-blue-500 focus:bg-white rounded-2xl px-4 py-3 text-sm focus:outline-none transition font-medium">
+                        
+                        <button type="submit" id="sendBtn" class="btn-3d-green text-white font-black px-5 py-3 rounded-2xl flex items-center justify-center gap-2 text-sm shrink-0">
+                            <span>Gửi</span> <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    <p id="micStatus" class="text-[11px] font-bold text-slate-400 mt-1 ml-2 hidden">
+                        🎙️ Đang lắng nghe bé nói... Hãy nói vào Micro nhé!
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-2 text-center text-xs font-bold text-slate-400">
+        Ứng dụng Học Tiếng Anh Chuẩn Cambridge Starters • Dành riêng cho Bé Minh Anh
+    </footer>
+
+    <script>
+        /************************************************************************
+         * 1. CONFIGURATION & GEMINI API KEY
+         ************************************************************************/
+        // Thay thế bằng API Key mới của bạn tại đây
+        const GEMINI_API_KEY = "AQ.YOUR_NEW_API_KEY_HERE";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+        let isCameraOn = false;
+        let mediaStream = null;
+        let speechRate = 1.0;
+        let recognition = null;
+        let isListening = false;
+
+        const SYSTEM_INSTRUCTION = `
+You are a warm, highly encouraging 3D AI Female English Teacher for a 5-year-old Vietnamese child named "Minh Anh".
+You are teaching standard Cambridge English (Starters level).
+
+STRICT RULES & GUARDRAILS:
+1. TARGET AUDIENCE: 5-year-old child (Minh Anh). Keep responses short, simple, enthusiastic, friendly, and highly engaging with emojis.
+2. LANGUAGE RULE: Explanations, instructions, praise, and guidance MUST BE 100% IN VIETNAMESE (warm and child-friendly like "Cô khen bé Minh Anh nè!", "Bé đọc cùng cô nhé!"). English is only used for vocabulary words, example sentences, or pronunciation practice.
+3. ABSOLUTE TOPIC LOCK (STRICT GUARDRAIL):
+   - You MUST ONLY teach English vocabulary, pronunciation, simple grammar, and Cambridge Starters lessons.
+   - IF Minh Anh asks about ANYTHING outside English learning:
+     You MUST politely decline in Vietnamese and immediately steer back to English learning.
+     Example refusal response: "Cô chỉ giúp bé Minh Anh học tiếng Anh thôi nè! Mình cùng quay lại bài học nhé! Bé có muốn học từ vựng về Con Vật không nào?"
+4. CONVERSATION FORMAT:
+   - Provide clear English vocabulary with Vietnamese meaning.
+   - Always end with a fun, short interactive question or request for Minh Anh to repeat a word/sentence in English.
+`;
+
+        /************************************************************************
+         * 2. INITIALIZATION
+         ************************************************************************/
+        window.addEventListener('DOMContentLoaded', () => {
+            const rateInput = document.getElementById('speedRate');
+            const speedValDisplay = document.getElementById('speedVal');
+            
+            rateInput.addEventListener('input', (e) => {
+                speechRate = parseFloat(e.target.value);
+                speedValDisplay.innerText = `${speechRate.toFixed(1)}x`;
+            });
+
+            initSpeechRecognition();
+        });
+
+        /************************************************************************
+         * 3. SPEECH-TO-TEXT
+         ************************************************************************/
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                console.warn("Trình duyệt không hỗ trợ Web Speech API.");
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'vi-VN';
+
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('micBtn').classList.add('mic-active');
+                document.getElementById('micStatus').classList.remove('hidden');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('userInput').value = transcript;
+                handleUserSubmit(new Event('submit'));
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech Recognition Error:", event.error);
+                stopListening();
+            };
+
+            recognition.onend = () => {
+                stopListening();
+            };
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                alert("Trình duyệt không hỗ trợ micro trực tiếp. Hãy dùng Google Chrome hoặc Edge nhé!");
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+            } else {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error("Mic Start Error:", e);
+                }
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            document.getElementById('micBtn').classList.remove('mic-active');
+            document.getElementById('micStatus').classList.add('hidden');
+        }
+
+        /************************************************************************
+         * 4. TEXT-TO-SPEECH (TTS) & LIP-SYNC
+         ************************************************************************/
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+
+            window.speechSynthesis.cancel();
+
+            const cleanText = text.replace(/[*#_]/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.rate = speechRate;
+
+            if (/[a-zA-Z]/.test(cleanText) && !cleanText.includes('không') && !cleanText.includes('bài') && !cleanText.includes('bé')) {
+                utterance.lang = 'en-US';
+            } else {
+                utterance.lang = 'vi-VN';
+            }
+
+            utterance.onstart = () => startLipSync();
+            utterance.onend = () => stopLipSync();
+            utterance.onerror = () => stopLipSync();
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function startLipSync() {
+            const mouth = document.getElementById('teacherMouth');
+            const indicator = document.getElementById('speakingIndicator');
+            if (mouth) mouth.classList.add('mouth-talking');
+            if (indicator) indicator.classList.remove('hidden');
+        }
+
+        function stopLipSync() {
+            const mouth = document.getElementById('teacherMouth');
+            const indicator = document.getElementById('speakingIndicator');
+            if (mouth) mouth.classList.remove('mouth-talking');
+            if (indicator) indicator.classList.add('hidden');
+        }
+
+        /************************************************************************
+         * 5. WEBCAM INTEGRATION
+         ************************************************************************/
+        async function toggleCamera() {
+            const video = document.getElementById('webcam');
+            const placeholder = document.getElementById('cameraPlaceholder');
+            const btnText = document.getElementById('camBtnText');
+
+            if (!isCameraOn) {
+                try {
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    video.srcObject = mediaStream;
+                    video.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    btnText.innerText = "Tắt Camera";
+                    isCameraOn = true;
+                } catch (err) {
+                    alert("Không thể mở Camera. Vui lòng cấp quyền truy cập Camera cho trình duyệt!");
+                }
+            } else {
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                }
+                video.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                btnText.innerText = "Bật Camera Của Bé";
+                isCameraOn = false;
+            }
+        }
+
+        /************************************************************************
+         * 6. GEMINI API CONNECTION & CHAT LOGIC
+         ************************************************************************/
+        async function handleUserSubmit(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('userInput');
+            const message = inputEl.value.trim();
+
+            if (!message) return;
+
+            appendMessage('user', message);
+            inputEl.value = '';
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.classList.add('opacity-50');
+
+            const loadingId = appendLoadingMessage();
+
+            try {
+                const reply = await fetchGeminiResponse(message);
+                removeMessage(loadingId);
+                appendMessage('teacher', reply);
+                speakText(reply);
+            } catch (error) {
+                removeMessage(loadingId);
+                console.error("Gemini Request Failed:", error);
+                const errorMsg = "Ôi, kết nối bị gián đoạn rồi. Bé kiểm tra lại API Key hoặc mạng giúp cô nhé!";
+                appendMessage('teacher', errorMsg);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('opacity-50');
+            }
+        }
+
+        async function fetchGeminiResponse(userPrompt) {
+            const requestBody = {
+                contents: [
+                    {
+                        role: "user",
+                        parts: [{ text: userPrompt }]
+                    }
+                ],
+                systemInstruction: {
+                    parts: [{ text: SYSTEM_INSTRUCTION }]
+                }
+            };
+
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                const errText = await response.text();
+                console.error("Gemini Error Details:", errText);
+                throw new Error(`API Error ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // Sửa lỗi crash nếu API không trả về đúng cấu trúc mong muốn
+            if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                return data.candidates[0].content.parts[0].text;
+            } else {
+                return "Cô chưa nghe rõ, bé nói lại cho cô nghe với nhé!";
+            }
+        }
+
+        function selectTopic(topicName) {
+            const prompt = `Cô ơi, hôm nay bé Minh Anh muốn học chủ đề "${topicName}". Cô dạy bé từ vựng cơ bản nhé!`;
+            document.getElementById('userInput').value = prompt;
+            handleUserSubmit(new Event('submit'));
+        }
+
+        /************************************************************************
+         * 7. UI RENDER HELPERS
+         ************************************************************************/
+        function appendMessage(sender, text) {
+            const chatBox = document.getElementById('chatBox');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "flex items-start gap-2.5 my-3";
+
+            if (sender === 'user') {
+                msgDiv.innerHTML = `
+                    <div class="flex flex-row-reverse items-start gap-2.5 w-full">
+                        <div class="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-amber-900 font-extrabold text-xs shrink-0">Bé</div>
+                        <div class="bg-amber-100 border border-amber-200 rounded-2xl rounded-tr-none p-3 max-w-[85%]">
+                            <p class="text-sm text-amber-950 font-semibold">${escapeHtml(text)}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const formattedText = escapeHtml(text)
+                    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                    .replace(/\n/g, '<br>');
+
+                const msgId = 'msg-' + Date.now();
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm shrink-0">Cô</div>
+                    <div class="bg-blue-50 border border-blue-100 rounded-2xl rounded-tl-none p-3 max-w-[85%] relative group">
+                        <p class="text-sm text-slate-800 font-medium leading-relaxed">${formattedText}</p>
+                        <button id="${msgId}" class="mt-2 text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                            <i class="fa-solid fa-volume-high"></i> Nghe lại
+                        </button>
+                    </div>
+                `;
+                chatBox.appendChild(msgDiv);
+                
+                // Gán sự kiện click an toàn (tránh làm vỡ chuỗi do ký tự đặc biệt)
+                document.getElementById(msgId).addEventListener('click', () => speakText(text));
+                chatBox.scrollTop = chatBox.scrollHeight;
+                return;
+            }
+
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function appendLoadingMessage() {
+            const chatBox = document.getElementById('chatBox');
+            const id = 'loading-' + Date.now();
+            const msgDiv = document.createElement('div');
+            msgDiv.id = id;
+            msgDiv.className = "flex items-start gap-2.5 my-3";
+            msgDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm shrink-0">Cô</div>
+                <div class="bg-blue-50 border border-blue-100 rounded-2xl rounded-tl-none p-3">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></span>
+                        <span class="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                        <span class="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                    </div>
+                </div>
+            `;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return id;
+        }
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
